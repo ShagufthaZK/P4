@@ -24,6 +24,94 @@
         "index": 2,
         "port": 1
       }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 2, "hdr.kv.op":0
+      },
+      "action_name": "MyIngress.kv_read",
+      "action_params": {
+        "index": 0,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 2, "hdr.kv.op":1
+      },
+      "action_name": "MyIngress.kv_write",
+      "action_params": {
+        "index": 0,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 3, "hdr.kv.op":0
+      },
+      "action_name": "MyIngress.kv_read",
+      "action_params": {
+        "index": 1,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 3, "hdr.kv.op":1
+      },
+      "action_name": "MyIngress.kv_write",
+      "action_params": {
+        "index": 1,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 4, "hdr.kv.op":0
+      },
+      "action_name": "MyIngress.kv_read",
+      "action_params": {
+        "index": 3,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 4, "hdr.kv.op":1
+      },
+      "action_name": "MyIngress.kv_write",
+      "action_params": {
+        "index": 3,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 5, "hdr.kv.op":0
+      },
+      "action_name": "MyIngress.kv_read",
+      "action_params": {
+        "index": 4,
+        "port": 1
+      }
+    },
+    {
+      "table": "MyIngress.kv_exact",
+      "match": {
+        "hdr.kv.key": 5, "hdr.kv.op":1
+      },
+      "action_name": "MyIngress.kv_write",
+      "action_params": {
+        "index": 4,
+        "port": 1
+      }
     }
   ]
 }

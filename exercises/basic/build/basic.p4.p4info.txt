@@ -28,7 +28,7 @@ tables {
   action_refs {
     id: 16800567
   }
-  size: 5
+  size: 10
 }
 actions {
   preamble {

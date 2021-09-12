@@ -159,7 +159,7 @@ control MyIngress(inout headers hdr,
     table kv_exact {
 	key = {hdr.kv.op:exact;hdr.kv.key:exact;}
 	actions = {kv_read;kv_write;NoAction;}
-	size = 5;
+	size = 10;
 	default_action = NoAction();
         
    }

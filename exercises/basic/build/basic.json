@@ -732,7 +732,7 @@
           ],
           "match_type" : "exact",
           "type" : "simple",
-          "max_size" : 5,
+          "max_size" : 10,
           "with_counters" : false,
           "support_timeout" : false,
           "direct_meters" : null,
