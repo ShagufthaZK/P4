@@ -15,5 +15,5 @@ class NetCache(Packet):
         return self.sprintf("key=%key%, op=%op%")
 
 
-bind_layers(TCP, NetCache, dport=PORT_NC)
+bind_layers(UDP, NetCache, dport=PORT_NC)
 

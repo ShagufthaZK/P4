@@ -5,6 +5,7 @@
 const bit<16> TYPE_IPV4 = 2048;
 const bit<16> PORT_NC = 1234;
 const bit<8> TYPE_TCP = 6;
+const bit<8> TYPE_UDP = 17;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -35,7 +36,7 @@ header ipv4_t {
     ip4Addr_t dstAddr;
    
 }
-
+/*
 header tcp_t {
     bit<16> srcPort;
     bit<16> dstPort;
@@ -48,6 +49,13 @@ header tcp_t {
     bit<16> window;
     bit<16> checksum;
     bit<16> urgentPtr;
+}*/
+
+header udp_t {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<16> length_;
+    bit<16> checksum;
 }
 
 header kv_t{
@@ -64,7 +72,7 @@ struct metadata {
 struct headers {
     ethernet_t   ethernet;
     ipv4_t       ipv4;
-    tcp_t	 tcp;
+    udp_t	 udp;
     kv_t	 kv;
     
 }
@@ -95,14 +103,14 @@ parser MyParser(packet_in packet,
 	state parse_ipv4 { 
 	packet.extract(hdr.ipv4);
 	transition select(hdr.ipv4.protocol){
-		TYPE_TCP: parse_tcp;
+		TYPE_UDP: parse_udp;
 		default: accept;
 	}
 	}
 
-	state parse_tcp { 
-	packet.extract(hdr.tcp);
-	transition select(hdr.tcp.dstPort){
+	state parse_udp { 
+	packet.extract(hdr.udp);
+	transition select(hdr.udp.dstPort){
 		PORT_NC: parse_kv;
 		default: accept;
 	}
@@ -216,7 +224,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
         /* TODO: add deparser logic */
 	packet.emit(hdr.ethernet);
 	packet.emit(hdr.ipv4);
-	packet.emit(hdr.tcp);
+	packet.emit(hdr.udp);
 	packet.emit(hdr.kv);
     }
 }

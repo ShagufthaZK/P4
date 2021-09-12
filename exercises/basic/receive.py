@@ -35,7 +35,7 @@ class IPOption_MRI(IPOption):
                                    IntField("", 0),
                                    length_from=lambda pkt:pkt.count*4) ]
 def handle_pkt(pkt):
-    if TCP in pkt and pkt[TCP].dport == 1234:
+    if UDP in pkt and pkt[UDP].dport == 1234:
         print "got a packet"
         ls(pkt)
     #    hexdump(pkt)

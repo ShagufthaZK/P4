@@ -64,20 +64,13 @@
       ]
     },
     {
-      "name" : "tcp_t",
+      "name" : "udp_t",
       "id" : 4,
       "fields" : [
         ["srcPort", 16, false],
         ["dstPort", 16, false],
-        ["seqNo", 32, false],
-        ["ackNo", 32, false],
-        ["dataOffset", 4, false],
-        ["res", 3, false],
-        ["ecn", 3, false],
-        ["ctrl", 6, false],
-        ["window", 16, false],
-        ["checksum", 16, false],
-        ["urgentPtr", 16, false]
+        ["length_", 16, false],
+        ["checksum", 16, false]
       ]
     },
     {
@@ -120,9 +113,9 @@
       "pi_omit" : true
     },
     {
-      "name" : "tcp",
+      "name" : "udp",
       "id" : 4,
-      "header_type" : "tcp_t",
+      "header_type" : "udp_t",
       "metadata" : false,
       "pi_omit" : true
     },
@@ -206,9 +199,9 @@
           "transitions" : [
             {
               "type" : "hexstr",
-              "value" : "0x06",
+              "value" : "0x11",
               "mask" : null,
-              "next_state" : "parse_tcp"
+              "next_state" : "parse_udp"
             },
             {
               "value" : "default",
@@ -224,14 +217,14 @@
           ]
         },
         {
-          "name" : "parse_tcp",
+          "name" : "parse_udp",
           "id" : 2,
           "parser_ops" : [
             {
               "parameters" : [
                 {
                   "type" : "regular",
-                  "value" : "tcp"
+                  "value" : "udp"
                 }
               ],
               "op" : "extract"
@@ -253,7 +246,7 @@
           "transition_key" : [
             {
               "type" : "field",
-              "value" : ["tcp", "dstPort"]
+              "value" : ["udp", "dstPort"]
             }
           ]
         },
@@ -290,11 +283,11 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 214,
+        "line" : 222,
         "column" : 8,
         "source_fragment" : "MyDeparser"
       },
-      "order" : ["ethernet", "ipv4", "tcp", "kv"]
+      "order" : ["ethernet", "ipv4", "udp", "kv"]
     }
   ],
   "meter_arrays" : [],
@@ -305,7 +298,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 72,
+        "line" : 80,
         "column" : 21,
         "source_fragment" : "kv_store"
       },
@@ -319,7 +312,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 191,
+        "line" : 199,
         "column" : 1,
         "source_fragment" : "update_checksum( ..."
       },
@@ -408,7 +401,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 140,
+            "line" : 148,
             "column" : 1,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -427,7 +420,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 141,
+            "line" : 149,
             "column" : 1,
             "source_fragment" : "macAddr_t temp = hdr.ethernet.srcAddr;"
           }
@@ -446,7 +439,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 142,
+            "line" : 150,
             "column" : 1,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -465,7 +458,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 143,
+            "line" : 151,
             "column" : 1,
             "source_fragment" : "hdr.ethernet.dstAddr = temp"
           }
@@ -507,7 +500,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 144,
+            "line" : 152,
             "column" : 1,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl -1"
           }
@@ -530,7 +523,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 145,
+            "line" : 153,
             "column" : 1,
             "source_fragment" : "kv_store.read(hdr.kv.data,index)"
           }
@@ -565,7 +558,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 150,
+            "line" : 158,
             "column" : 1,
             "source_fragment" : "standard_metadata.egress_spec = port"
           }
@@ -584,7 +577,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 151,
+            "line" : 159,
             "column" : 1,
             "source_fragment" : "macAddr_t temp = hdr.ethernet.srcAddr;"
           }
@@ -603,7 +596,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 152,
+            "line" : 160,
             "column" : 1,
             "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
           }
@@ -622,7 +615,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 153,
+            "line" : 161,
             "column" : 1,
             "source_fragment" : "hdr.ethernet.dstAddr = temp"
           }
@@ -664,7 +657,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 154,
+            "line" : 162,
             "column" : 1,
             "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl -1"
           }
@@ -687,7 +680,7 @@
           ],
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 155,
+            "line" : 163,
             "column" : 1,
             "source_fragment" : "kv_store.write(index,hdr.kv.data)"
           }
@@ -701,7 +694,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 134,
+        "line" : 142,
         "column" : 8,
         "source_fragment" : "MyIngress"
       },
@@ -712,7 +705,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 159,
+            "line" : 167,
             "column" : 10,
             "source_fragment" : "kv_exact"
           },
@@ -759,7 +752,7 @@
           "id" : 0,
           "source_info" : {
             "filename" : "basic.p4",
-            "line" : 169,
+            "line" : 177,
             "column" : 4,
             "source_fragment" : "hdr.kv.isValid()"
           },
@@ -784,7 +777,7 @@
       "id" : 1,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 179,
+        "line" : 187,
         "column" : 8,
         "source_fragment" : "MyEgress"
       },
@@ -800,7 +793,7 @@
       "id" : 0,
       "source_info" : {
         "filename" : "basic.p4",
-        "line" : 191,
+        "line" : 199,
         "column" : 1,
         "source_fragment" : "update_checksum( ..."
       },
