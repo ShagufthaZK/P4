@@ -2,9 +2,9 @@
 #include <core.p4>
 #include <v1model.p4>
 
-const bit<16> TYPE_IPV4 = 0x800;
-const bit<16> TYPE_NC = 0x1212;
-const bit<16> TYPE_TCP = 0x06;
+const bit<16> TYPE_IPV4 = 2048;
+const bit<16> PORT_NC = 1234;
+const bit<8> TYPE_TCP = 6;
 
 /*************************************************************************
 *********************** H E A D E R S  ***********************************
@@ -33,16 +33,27 @@ header ipv4_t {
     bit<16>   hdrChecksum;
     ip4Addr_t srcAddr;
     ip4Addr_t dstAddr;
-    bit<16>   ip_type;
+   
 }
 
-header tcp_t{
-    bit<16>   tcp_type;//check if this is ok, or if all fields are required
+header tcp_t {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<32> seqNo;
+    bit<32> ackNo;
+    bit<4>  dataOffset;
+    bit<3>  res;
+    bit<3>  ecn;
+    bit<6>  ctrl;
+    bit<16> window;
+    bit<16> checksum;
+    bit<16> urgentPtr;
 }
+
 header kv_t{
     bit<16> op;
-    int<16> key;
-    int<16> data;
+     int<32> key;
+     int<32> data;
 
 }
 
@@ -58,7 +69,7 @@ struct headers {
     
 }
 
-register<int<16>>(5) kv_store;
+register<int<32>>(5) kv_store;
 
 /*************************************************************************
 *********************** P A R S E R  ***********************************
@@ -83,7 +94,7 @@ parser MyParser(packet_in packet,
 
 	state parse_ipv4 { 
 	packet.extract(hdr.ipv4);
-	transition select(hdr.ipv4.ip_type){
+	transition select(hdr.ipv4.protocol){
 		TYPE_TCP: parse_tcp;
 		default: accept;
 	}
@@ -91,8 +102,8 @@ parser MyParser(packet_in packet,
 
 	state parse_tcp { 
 	packet.extract(hdr.tcp);
-	transition select(hdr.tcp.tcp_type){
-		TYPE_TCP: parse_kv;
+	transition select(hdr.tcp.dstPort){
+		PORT_NC: parse_kv;
 		default: accept;
 	}
 	}
@@ -123,30 +134,7 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
-    action drop() {
-        mark_to_drop(standard_metadata);
-    }
     
-    action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
-        /* TODO: fill out code in action body */
-	standard_metadata.egress_spec = port;
-	hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
-	hdr.ethernet.dstAddr = dstAddr;
-	hdr.ipv4.ttl = hdr.ipv4.ttl -1;
-    }
-    
-    table ipv4_lpm {
-        key = {
-            hdr.ipv4.dstAddr: lpm;
-        }
-        actions = {
-            ipv4_forward;
-            drop;
-            NoAction;
-        }
-        size = 1024;
-        default_action = NoAction();
-    }
     
     action kv_read(bit<32> index,egressSpec_t port){
 	standard_metadata.egress_spec = port;
@@ -169,7 +157,7 @@ control MyIngress(inout headers hdr,
     }
 
     table kv_exact {
-	key = {hdr.kv.key:exact;hdr.kv.op:exact;}
+	key = {hdr.kv.op:exact;hdr.kv.key:exact;}
 	actions = {kv_read;kv_write;NoAction;}
 	size = 5;
 	default_action = NoAction();
@@ -177,12 +165,10 @@ control MyIngress(inout headers hdr,
    }
     
     apply {
-        /* TODO: fix ingress control logic
-         *  - ipv4_lpm should be applied only when IPv4 header is valid
-         */
+       
 	if(hdr.kv.isValid()){kv_exact.apply();}
-	else 
-	ipv4_lpm.apply();
+	/*else 
+	ipv4_lpm.apply();*/
     }
 }
 

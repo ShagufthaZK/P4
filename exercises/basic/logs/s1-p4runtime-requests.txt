@@ -1,31 +1,10 @@
 
-[2021-09-09 12:10:04.924] /p4.v1.P4Runtime/SetForwardingPipelineConfig
+[2021-09-12 06:32:32.732] /p4.v1.P4Runtime/SetForwardingPipelineConfig
 ---
-Message too long (18290 bytes)! Skipping log...
----
-
-[2021-09-09 12:10:04.940] /p4.v1.P4Runtime/Write
----
-election_id {
-  low: 1
-}
-updates {
-  type: MODIFY
-  entity {
-    table_entry {
-      table_id: 33574068
-      action {
-        action {
-          action_id: 16805608
-        }
-      }
-      is_default_action: true
-    }
-  }
-}
+Message too long (25535 bytes)! Skipping log...
 ---
 
-[2021-09-09 12:10:04.956] /p4.v1.P4Runtime/Write
+[2021-09-12 06:32:32.767] /p4.v1.P4Runtime/Write
 ---
 election_id {
   low: 1
@@ -34,20 +13,25 @@ updates {
   type: INSERT
   entity {
     table_entry {
-      table_id: 33574068
+      table_id: 33561146
+      match {
+        field_id: 2
+        exact {
+          value: "\000\000\000\001"
+        }
+      }
       match {
         field_id: 1
-        lpm {
-          value: "\n\000\001\001"
-          prefix_len: 32
+        exact {
+          value: "\000\000"
         }
       }
       action {
         action {
-          action_id: 16799317
+          action_id: 16832977
           params {
             param_id: 1
-            value: "\010\000\000\000\001\021"
+            value: "\000\000\000\002"
           }
           params {
             param_id: 2
@@ -60,7 +44,7 @@ updates {
 }
 ---
 
-[2021-09-09 12:10:04.961] /p4.v1.P4Runtime/Write
+[2021-09-12 06:32:32.779] /p4.v1.P4Runtime/Write
 ---
 election_id {
   low: 1
@@ -69,94 +53,29 @@ updates {
   type: INSERT
   entity {
     table_entry {
-      table_id: 33574068
+      table_id: 33561146
+      match {
+        field_id: 2
+        exact {
+          value: "\000\000\000\001"
+        }
+      }
       match {
         field_id: 1
-        lpm {
-          value: "\n\000\002\002"
-          prefix_len: 32
+        exact {
+          value: "\000\001"
         }
       }
       action {
         action {
-          action_id: 16799317
+          action_id: 16833529
           params {
             param_id: 1
-            value: "\010\000\000\000\002\""
+            value: "\000\000\000\002"
           }
           params {
             param_id: 2
-            value: "\000\002"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-09-09 12:10:04.964] /p4.v1.P4Runtime/Write
----
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33574068
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\003\003"
-          prefix_len: 32
-        }
-      }
-      action {
-        action {
-          action_id: 16799317
-          params {
-            param_id: 1
-            value: "\010\000\000\000\003\000"
-          }
-          params {
-            param_id: 2
-            value: "\000\003"
-          }
-        }
-      }
-    }
-  }
-}
----
-
-[2021-09-09 12:10:04.969] /p4.v1.P4Runtime/Write
----
-election_id {
-  low: 1
-}
-updates {
-  type: INSERT
-  entity {
-    table_entry {
-      table_id: 33574068
-      match {
-        field_id: 1
-        lpm {
-          value: "\n\000\004\004"
-          prefix_len: 32
-        }
-      }
-      action {
-        action {
-          action_id: 16799317
-          params {
-            param_id: 1
-            value: "\010\000\000\000\004\000"
-          }
-          params {
-            param_id: 2
-            value: "\000\004"
+            value: "\000\001"
           }
         }
       }
